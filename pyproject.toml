@@ -2,7 +2,11 @@
 name = "xarray-healpy"
 requires-python = ">= 3.10"
 license = {text = "MIT"}
-dependencies = []
+dependencies = [
+    "xarray",
+    "healpy",
+    "numba",
+]
 dynamic = ["version"]
 
 [build-system]
