@@ -37,9 +37,9 @@ def _compute_coords(nside, sector, xx, yy):
     return lat, lon
 
 
-def _fit_weights(nside, source_lat, source_lon, rot=(0, 0)):
-    theta = np.deg2rad(90.0 - (source_lat - rot[1]))
-    phi = -np.deg2rad(source_lon - rot[0])
+def _fit_weights(nside, source_lat, source_lon, rot={"lat": 0, "lon": 0}):
+    theta = np.deg2rad(90.0 - (source_lat.flatten() - rot["lat"]))
+    phi = -np.deg2rad(source_lon.flatten() - rot["lon"])
 
     pix, weights = hp.get_interp_weights(nside, theta, phi, nest=True)
     pix -= nside ** 2 * np.min(pix) // nside ** 2
