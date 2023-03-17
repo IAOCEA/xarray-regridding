@@ -21,8 +21,9 @@ def _compute_indices(nside):
     return xx, yy
 
 
-def _compute_coords(nside, xx, yy):
-    theta, phi = hp.pix2ang(nside, np.arange(nside ** 2), nest=True)
+def _compute_coords(nside, sector, xx, yy):
+    lidx = sector * nside ** 2 + np.arange(nside ** 2)
+    theta, phi = hp.pix2ang(nside, lidx, nest=True)
 
     lat_ = 90.0 - np.rad2deg(theta)
     lon_ = -np.rad2deg(phi)
