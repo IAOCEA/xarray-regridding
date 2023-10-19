@@ -1,19 +1,19 @@
+import healpy as hp
 import numba
 import numpy as np
-import healpy as hp
 
 
 @numba.jit(nopython=True, parallel=True)
 def _compute_indices(nside):
     nstep = int(np.log2(nside))
 
-    lidx = np.arange(nside ** 2)
+    lidx = np.arange(nside**2)
     xx = np.zeros_like(lidx)
     yy = np.zeros_like(lidx)
 
     for i in range(nstep):
-        p1 = 2 ** i
-        p2 = (lidx // 4 ** i) % 4
+        p1 = 2**i
+        p2 = (lidx // 4**i) % 4
 
         xx = xx + p1 * (p2 % 2)
         yy = yy + p1 * (p2 // 2)
@@ -22,7 +22,7 @@ def _compute_indices(nside):
 
 
 def _compute_coords(nside, sector, xx, yy):
-    lidx = sector * nside ** 2 + np.arange(nside ** 2)
+    lidx = sector * nside**2 + np.arange(nside**2)
     theta, phi = hp.pix2ang(nside, lidx, nest=True)
 
     lat_ = 90.0 - np.rad2deg(theta)
@@ -42,6 +42,6 @@ def _fit_weights(nside, source_lat, source_lon, rot={"lat": 0, "lon": 0}):
     phi = -np.deg2rad(source_lon.flatten() - rot["lon"])
 
     pix, weights = hp.get_interp_weights(nside, theta, phi, nest=True)
-    pix -= nside ** 2 * np.min(pix) // nside ** 2
+    pix -= nside**2 * np.min(pix) // nside**2
 
     return pix, weights

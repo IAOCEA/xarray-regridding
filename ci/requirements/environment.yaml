@@ -1,12 +1,12 @@
 name: xarray-healpy-tests
 channels:
-- conda-forge
+  - conda-forge
 dependencies:
-- python=3.10
-- xarray
-- healpy
-- numba
-- ipython
-- pre-commit
-- pytest
-- pytest-reportlog
+  - python=3.10
+  - xarray
+  - healpy
+  - numba
+  - ipython
+  - pre-commit
+  - pytest
+  - pytest-reportlog

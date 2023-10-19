@@ -1,11 +1,11 @@
 name: xarray-healpy-docs
 channels:
-- conda-forge
+  - conda-forge
 dependencies:
-- python=3.10
-- sphinx>=4
-- sphinx-book-theme
-- ipython
-- xarray
-- healpy
-- numba
+  - python=3.10
+  - sphinx>=4
+  - sphinx-book-theme
+  - ipython
+  - xarray
+  - healpy
+  - numba
