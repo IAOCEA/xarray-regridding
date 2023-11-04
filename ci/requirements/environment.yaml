@@ -6,9 +6,9 @@ dependencies:
   - fsspec
   - kerchunk
   - zarr
-  - jupyterlab-git
   - git
   - xarray
+  - bottleneck
   - healpy
   - numba
   - intake-xarray
@@ -16,9 +16,12 @@ dependencies:
   - hvplot
   - netcdf4
   - h5netcdf
+  - aiohttp
   - ipython
   - ipykernel
-  - jupyterlab_code_formatter
   - pre-commit
+  - cartopy
+  - geoviews
+  - pyproj
   - pytest
   - pytest-reportlog
