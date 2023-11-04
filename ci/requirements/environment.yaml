@@ -3,10 +3,22 @@ channels:
   - conda-forge
 dependencies:
   - python=3.10
+  - fsspec
+  - kerchunk
+  - zarr
+  - jupyterlab-git
+  - git
   - xarray
   - healpy
   - numba
+  - intake-xarray
+  - zstandard
+  - hvplot
+  - netcdf4
+  - h5netcdf
   - ipython
+  - ipykernel
+  - jupyterlab_code_formatter
   - pre-commit
   - pytest
   - pytest-reportlog
