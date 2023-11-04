@@ -5,6 +5,7 @@ license = {text = "MIT"}
 dependencies = [
     "xarray",
     "healpy",
+    "sparse",
     "numba",
     "numpy",
 ]
