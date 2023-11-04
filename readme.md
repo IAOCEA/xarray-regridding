@@ -1,6 +1,22 @@
-
 # Xarray-Healpy
 
-**Xarray-Healpy** is designed to convert georeferenced data (latitude and longitude) into a Healpix grid (https://healpix.sourceforge.io) and make use of the array indexing system provided by **Xarray** (http://xarray.pydata.org).
+**Xarray-Healpy** is designed to convert georeferenced data expressed in latitude and longitude into a Healpix grid (https://healpix.sourceforge.io) and make use of the array indexing system provided by **Xarray** (http://xarray.pydata.org).
 
-We are interested in working with data of varying precisions within a Hierarchical Equal Area Grid and performing computations such as convolution, while taking into consideration land masks for oceanography studies.
+The development of Xarray-Healpy was initiated to meet the specific requirements of oceanography studies, which involve the analysis of geospatial data with varying precisions. This tool enables the performance of computations such as convolution while considering land masks through the utilization of a Hierarchical Equal Area Grid.
+
+Given the particular characteristics of the Hierarchical Equal Area Grid, our aim is to provide solutions for Travel Time Analysis (like, H3 Travel Times - https://observablehq.com/@nrabinowitz/h3-travel-times), taking into account land masks and oceanic physical properties using Xarray-Healpy, with the goal of improving the tracking of fish habitats.
+
+
+## How to test examples on your jupyterlab enviroment
+
+```
+git clone https://github.com/IAOCEA/xarray-healpy.git
+cd xarray-healpy
+micromamba create -n xarray-healpy-test -f ci/requirements/environment.yaml
+micromamba activate xarray-healpy-test
+pip install -e .
+ipython kernel install --name xarray-healpy-test --user
+
+```
+
+

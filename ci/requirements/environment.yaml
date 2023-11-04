@@ -3,10 +3,25 @@ channels:
   - conda-forge
 dependencies:
   - python=3.10
+  - fsspec
+  - kerchunk
+  - zarr
+  - git
   - xarray
+  - bottleneck
   - healpy
   - numba
+  - intake-xarray
+  - zstandard
+  - hvplot
+  - netcdf4
+  - h5netcdf
+  - aiohttp
   - ipython
+  - ipykernel
   - pre-commit
+  - cartopy
+  - geoviews
+  - pyproj
   - pytest
   - pytest-reportlog
