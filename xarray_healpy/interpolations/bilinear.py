@@ -146,7 +146,30 @@ def bilinear_interpolation_weights(
     metric="euclidean",
     coords=["longitude", "latitude"],
 ):
-    """xarray-aware bilinear interpolation weights computation"""
+    """xarray-aware bilinear interpolation weights computation
+
+    Parameters
+    ----------
+    source_grid : xarray.Dataset
+        The source grid. Has to have the coordinates specified by ``coords``.
+    target_grid : xarray.Dataset
+        The target grid. Has to have the coordinates specified by ``coords``.
+    n_neighbors : int, default: 6
+        How many neighbors the to search for each target point. Minimum is 4, but with 6
+        the surrounding vertices are found more accurately.
+    metric : str, default: "euclidean"
+        The metric to use when find the nearest neighbors. Look at the value of
+        ``BallTree.valid_metrics`` for the full list of metrics. Note that choosing
+        metrics other than ``"euclidean"`` affects the neighbors search, but so far the
+        weights computation itself happens in a euclidean space.
+    coords : list of str, default: ["longitude", "latitude"]
+        The names of the spatial coordinates in both the source and target grids.
+
+    Returns
+    -------
+    weights : xarray.DataArray
+        The computed weights as a sparse matrix.
+    """
     # TODO: how do we detect the variables and dims to stack?
     # For now, just use the coords directly
     source_stacked_dim = "_source_cells"
