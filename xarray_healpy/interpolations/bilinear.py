@@ -41,6 +41,10 @@ def _compute_bilinear_interpolation_weights(
         The computed weights for each of the four surrounding vertices of each target point.
     surrounding_vertex_indices : array-like
         The indices of the surrounding vertices determined from the neighbors.
+
+    Warnings
+    --------
+    Note that the interpolation function doesn't support curvilinear source grids yet.
     """
     # todo: use `guvectorize` instead of `njit` and the manual loop, as that would allow
     # parallelizing the loop
