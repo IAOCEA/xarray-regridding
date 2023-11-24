@@ -8,6 +8,8 @@ import xarray as xr
 # TODO: replace with a scipy KDTree
 from sklearn.neighbors import BallTree
 
+from xarray_healpy.interpolations.mask import mask_weights
+
 
 @numba.njit
 def norm(array, axis=-1):
@@ -145,6 +147,8 @@ def bilinear_interpolation_weights(
     n_neighbors=6,
     metric="euclidean",
     coords=["longitude", "latitude"],
+    mask=None,
+    min_vertices=3,
 ):
     """xarray-aware bilinear interpolation weights computation
 
@@ -164,6 +168,10 @@ def bilinear_interpolation_weights(
         weights computation itself happens in a euclidean space.
     coords : list of str, default: ["longitude", "latitude"]
         The names of the spatial coordinates in both the source and target grids.
+    mask : str or xarray.DataArray, optional
+        If given, set the weight of input grid cells where the mask is ``False`` to 0. If
+        a ``str``, the variable of that name will be pulled from the source grid. If a
+        :py:class:`xarray.DataArray`, has to have the same dimensions as the source grid.
 
     Returns
     -------
@@ -199,6 +207,21 @@ def bilinear_interpolation_weights(
         neighbor_indices,
     )
 
+    if mask is not None:
+        if isinstance(mask, str):
+            mask_ = source_grid[mask]
+        else:
+            mask_ = mask
+
+        stacked_mask = mask_.stack({source_stacked_dim: source_stack_dims})
+
+        raw_weights = mask_weights(
+            raw_weights,
+            surrounding_vertex_indices,
+            stacked_mask.data,
+            min_vertices=min_vertices,
+        )
+
     # arrange as a sparse matrix
     n_target = target_coords.shape[0]
     n_source = source_coords.shape[0]
@@ -211,10 +234,20 @@ def bilinear_interpolation_weights(
     source_shape = tuple([source_grid.sizes[dim] for dim in source_stack_dims])
     target_shape = tuple([target_grid.sizes[dim] for dim in target_stack_dims])
 
+    reshaped_sparse_coords = np.reshape(sparse_coords, (2, -1))
+    reshaped_raw_weights = np.reshape(raw_weights, -1)
+
+    if mask is not None:
+        not_ignored = np.reshape(np.argwhere(reshaped_raw_weights != 0.0), -1)
+
+        coords = reshaped_sparse_coords[:, not_ignored]
+        data = reshaped_raw_weights[not_ignored]
+    else:
+        coords = reshaped_sparse_coords
+        data = reshaped_raw_weights
+
     raw_weights_matrix = sparse.COO(
-        np.reshape(sparse_coords, (2, -1)),
-        data=np.reshape(raw_weights, -1),
-        shape=(n_target, n_source),
+        coords=coords, data=data, shape=(n_target, n_source), fill_value=0.0
     )
     weights_matrix = np.reshape(raw_weights_matrix, target_shape + source_shape)
 
