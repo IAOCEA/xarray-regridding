@@ -10,6 +10,8 @@ dependencies = [
     "sparse",
     "scikit-learn",
     "opt_einsum",
+    "cdshealpix",
+    "astropy",
 ]
 dynamic = ["version"]
 
