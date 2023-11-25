@@ -8,7 +8,7 @@ import xarray as xr
 # TODO: replace with a scipy KDTree
 from sklearn.neighbors import BallTree
 
-from xarray_healpy.interpolations.mask import mask_weights
+from xarray_healpy.interpolation.mask import mask_weights
 
 
 @numba.njit
