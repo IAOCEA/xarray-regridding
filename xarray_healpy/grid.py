@@ -127,12 +127,15 @@ class HealpyGridInfo:
             cdshealpix.nested.healpix_to_lonlat(pixel_indices, depth=self.level),
         )
 
-        grid_params = {
-            "grid_type": "healpix",
-            "level": self.level,
-            "nside": self.nside,
-            **self.rot,
-        }
+        grid_params = (
+            {
+                "grid_type": "healpix",
+                "level": self.level,
+                "nside": self.nside,
+            }
+            | self.rot
+            | {f"rot_{k}": v for k, v in self.rot.items()}
+        )
 
         target_grid = xr.Dataset(
             coords={
@@ -140,7 +143,8 @@ class HealpyGridInfo:
                 "latitude": ("cells", target_lat, {"units": "deg"}),
                 "longitude": ("cells", target_lon, {"units": "deg"}),
                 "resolution": ((), hp.nside2resol(self.nside), {"units": "rad"}),
-            }
+            },
+            attrs=grid_params,  # for compat, delete later
         )
 
         return self.rotate(target_grid, direction="global")
