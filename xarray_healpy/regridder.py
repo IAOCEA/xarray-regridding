@@ -24,6 +24,15 @@ class HealpyRegridder:
         The interpolation method. For now, only bilinear exists.
     interpolation_kwargs : dict, optional
         Additional parameters for the interpolation method.
+
+    Warnings
+    --------
+    At the moment, none of the interpolation methods can deal with the nature of spherical
+    coordinates on the plane. This means that global interpolation will fail in regions
+    close to the poles and the ante-meridian. For regional interpolation make sure that
+    the ante-meridian is far from the interpolation domain (for example by choosing the
+    coordinate range – 0° to 360° or -180° to 180° – appropriately). Regions close to the
+    poles will still fail to interpolate.
     """
 
     input_grid: xr.Dataset = field(repr=False)
