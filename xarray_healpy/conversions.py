@@ -91,3 +91,7 @@ def astronomic_to_cell_ids(nside, phi, theta):
     )
 
     return cell_ids
+
+
+def base_pixel(level, indices):
+    return indices >> (level * 2)
