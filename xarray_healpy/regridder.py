@@ -31,7 +31,7 @@ class HealpyRegridder:
     method: str = "bilinear"
     interpolation_kwargs: dict = field(default_factory=dict)
 
-    weights_path: str | os.PathLike | None = field(None, repr=False)
+    weights_path: str | os.PathLike | None = field(default=None, repr=False)
 
     weights: xr.Dataset = field(init=False, repr=False)
 
