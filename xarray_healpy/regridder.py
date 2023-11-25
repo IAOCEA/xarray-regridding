@@ -10,26 +10,30 @@ interpolation_methods = {
 }
 
 
-@dataclass(repr=False)
+@dataclass(repr=True)
 class HealpyRegridder:
-    """regrid a dataset to healpy face 0
+    """regrid the given dataset to a healpix grid
 
     Parameters
     ----------
-    input_grid : xr.Dataset
-        The input dataset. For now, it has to have the `"latitude"` and `"longitude"` coordinates.
-    output_grid : HealpyGridInfo
-        The target grid, containing healpix parameters like `nside` and `rot`.
+    source_grid : xr.Dataset
+        The source dataset. Has to have ``"latitude"`` and ``"longitude"`` coordinates.
+    target_grid : xr.Dataset
+        The target grid. Has to have ``"latitude"`` and ``"longitude"`` coordinates.
+    method : str, default: "bilinear"
+        The interpolation method. For now, only bilinear exists.
+    interpolation_kwargs : dict, optional
+        Additional parameters for the interpolation method.
     """
 
-    input_grid: xr.Dataset
-    output_grid: xr.Dataset
+    input_grid: xr.Dataset = field(repr=False)
+    output_grid: xr.Dataset = field(repr=False)
     method: str = "bilinear"
     interpolation_kwargs: dict = field(default_factory=dict)
 
-    weights_path: str | os.PathLike | None = None
+    weights_path: str | os.PathLike | None = field(None, repr=False)
 
-    weights: xr.Dataset = field(init=False)
+    weights: xr.Dataset = field(init=False, repr=False)
 
     def __post_init__(self):
         interpolator = interpolation_methods.get(self.method)
