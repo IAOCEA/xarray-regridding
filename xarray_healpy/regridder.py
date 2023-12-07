@@ -85,6 +85,8 @@ class HealpyRegridder:
                 dims=src_dims,
             )
 
-        return ds.map(_apply_weights, weights=self.weights.chunk()).assign_attrs(
-            self.output_grid.attrs
+        return (
+            ds.map(_apply_weights, weights=self.weights.chunk())
+            .assign_attrs(self.output_grid.attrs)
+            .assign_coords(cell_ids=self.weights["cell_ids"])
         )
