@@ -5,6 +5,7 @@ import dask
 import healpy as hp
 import numba
 import numpy as np
+import pandas as pd
 import shapely
 import xarray as xr
 from astropy.coordinates import Latitude, Longitude
@@ -38,21 +39,10 @@ def _compute_coords(nside):
     return lat, lon, lidx
 
 
-@numba.njit
-def _find_grid_indices(flat_grid, values):
-    indices = np.full(flat_grid.shape, dtype="int64", fill_value=-1)
-    for index in range(flat_grid.size):
-        grid_value = flat_grid[index]
-        pos = np.argwhere(grid_value == values)
+def _find_grid_indices(grid_values, values):
+    index = pd.Index(values)
 
-        if pos.size == 0:
-            continue
-        elif pos.size != 1:
-            raise ValueError("values not unique")
-
-        indices[index] = pos.item()
-
-    return indices
+    return index.get_indexer(grid_values)
 
 
 def _to_2d(data, indices, new_shape):
