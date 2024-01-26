@@ -4,6 +4,27 @@ import numpy as np
 import xarray as xr
 
 
+def geographic_to_cartesian(lon, lat, rot, dim=None):
+    lon_ = lon + rot["lon"]
+    lat_ = lat + rot["lat"]
+
+    if dim is None:
+        dims = list(lon.dims)
+    elif isinstance(dim, str):
+        dims = [dim]
+    else:
+        dims = dim
+
+    return xr.apply_ufunc(
+        hp.ang2vec,
+        lon_,
+        lat_,
+        input_core_dims=[dims, dims],
+        output_core_dims=[[*dims, "cartesian"]],
+        kwargs={"lonlat": True},
+    )
+
+
 def geographic_to_astronomic(lat, lon, rot):
     """transform geographic coordinates to astronomic coordinates
 
