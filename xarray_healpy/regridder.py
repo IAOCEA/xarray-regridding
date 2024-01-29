@@ -85,8 +85,16 @@ class HealpyRegridder:
                 dims=src_dims,
             )
 
+        unchanged_coords = {
+            k: v
+            for k, v in ds.coords.items()
+            if not set(self.weights.attrs["sum_dims"]).intersection(v.dims)
+        }
+
+        # TODO: copy over existing indexes on unchanged coords
         return (
             ds.map(_apply_weights, weights=self.weights.chunk())
             .assign_attrs(self.output_grid.attrs)
             .assign_coords(cell_ids=self.weights["cell_ids"])
+            .assign_coords({"cell_ids": self.weights["cell_ids"]} | unchanged_coords)
         )
