@@ -5,8 +5,8 @@ import xarray as xr
 
 
 def geographic_to_cartesian(lon, lat, rot, dim=None):
-    lon_ = lon + rot["lon"]
-    lat_ = lat + rot["lat"]
+    lon_ = lon - rot["lon"]
+    lat_ = lat - rot["lat"]
 
     if dim is None:
         dims = list(lon.dims)
