@@ -72,6 +72,9 @@ class HealpyGridInfo:
     def nside(self):
         return 2**self.level
 
+    def base_pixels(self, cell_ids):
+        return np.unique(base_pixel(self.level, cell_ids.data))
+
     def rotate(self, grid, *, direction="rotated"):
         if direction == "rotated":
             return grid.assign_coords(
