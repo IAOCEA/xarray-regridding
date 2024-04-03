@@ -69,7 +69,7 @@ class HealpyGridInfo:
     rot: dict[str, float]
 
     def __post_init__(self):
-        self.rotator = hp.Rotator(rot=[self.rot[k] for k in ["lon", "lat"]], deg=True)
+        self.rotator = hp.Rotator(rot=[self.rot[k] for k in ["lat", "lon"]], deg=True)
 
     @property
     def nside(self):
