@@ -68,6 +68,9 @@ class HealpyGridInfo:
 
     rot: dict[str, float]
 
+    def __post_init__(self):
+        self.rotator = hp.Rotator(rot=[self.rot[k] for k in ["lon", "lat"]], deg=True)
+
     @property
     def nside(self):
         return 2**self.level
@@ -76,20 +79,28 @@ class HealpyGridInfo:
         return np.unique(base_pixel(self.level, cell_ids.data))
 
     def rotate(self, grid, *, direction="rotated"):
-        if direction == "rotated":
-            return grid.assign_coords(
-                {
-                    "latitude": grid["latitude"] - self.rot["lat"],
-                    "longitude": grid["longitude"] - self.rot["lon"],
-                }
+        def _rotate(lon, lat, inv):
+            rotated_lon, rotated_lat = self.rotator(
+                lon.flatten(), lat.flatten(), inv=inv, lonlat=True
             )
-        elif direction == "global":
-            return grid.assign_coords(
-                {
-                    "latitude": grid["latitude"] + self.rot["lat"],
-                    "longitude": grid["longitude"] + self.rot["lon"],
-                }
-            )
+
+            rotated_lon_ = np.reshape(rotated_lon, lon.shape)
+            rotated_lat_ = np.reshape(rotated_lat, lat.shape)
+
+            return rotated_lon_, rotated_lat_
+
+        lon = grid["longitude"]
+        lat = grid["latitude"]
+
+        rotated_lon, rotated_lat = xr.apply_ufunc(
+            _rotate,
+            lon,
+            lat,
+            kwargs={"inv": direction == "global"},
+            input_core_dims=[list(lon.dims), list(lat.dims)],
+            output_core_dims=[list(lon.dims), list(lat.dims)],
+        )
+        return grid.assign_coords({"latitude": rotated_lat, "longitude": rotated_lon})
 
     def target_grid(self, source_grid):
         if self.rot:
