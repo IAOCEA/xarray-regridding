@@ -1,4 +1,4 @@
-from dataclasses import dataclass,field
+from dataclasses import dataclass, field
 
 import cdshealpix
 import dask
@@ -212,6 +212,7 @@ class HealpyGridInfo:
 
         # rotate if necessary
         return self.rotate(reshaped, direction="global")
+
 
 def create_grid(nside, rot=None):
     if rot is None:
