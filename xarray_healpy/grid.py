@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import cdshealpix
 import dask
@@ -66,7 +66,7 @@ class HealpyGridInfo:
 
     level: int
 
-    rot: dict[str, float]
+    rot: dict[str, float] = field(default_factory=lambda: {"lat": 0, "lon": 0})
 
     @property
     def nside(self):
@@ -214,5 +214,7 @@ class HealpyGridInfo:
         return self.rotate(reshaped, direction="global")
 
 
-def create_grid(nside, rot={"lat": 0, "lon": 0}):
+def create_grid(nside, rot=None):
+    if rot is None:
+        rot = {"lat": 0, "lon": 0}
     return HealpyGridInfo(nside=nside, rot=rot)
