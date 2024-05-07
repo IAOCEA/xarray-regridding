@@ -138,6 +138,78 @@ class HealpyGridInfo:
         )
 
         return self.rotate(target_grid, direction="global")
+    
+    def to_2d_bis(self, ds, dim="cells"):
+        # rotate if necessary
+        if self.rot:
+            ds = self.rotate(ds, direction="rotated")
+        
+        cell_ids = ds["cell_ids"].compute()
+        
+        base_pixels = np.unique(base_pixel(self.level, cell_ids.data))
+        
+        pixel_dict = {}
+        
+        for bpx in base_pixels:
+            # compute 2D pixel index
+            xx, yy = _compute_indices(self.level)
+            all_pixels = np.full((self.nside, self.nside), fill_value=-1, dtype=int)
+            all_pixels[xx, yy] = bpx * 4**self.level + np.arange(
+                4**self.level
+            )
+            pixel_dict[str(bpx)] = all_pixels
+        
+        all_pixels = np.concatenate([pixel_dict[px] for px in pixel_dict.keys()],axis=0)
+
+        # filter out rows and columns that are all not in the data
+        mask = np.isin(all_pixels, cell_ids)
+        rows_to_keep = np.squeeze(np.argwhere(np.any(mask, axis=1)))
+        columns_to_keep = np.squeeze(np.argwhere(np.any(mask, axis=0)))
+
+        filtered_pixels = all_pixels[rows_to_keep, :][:, columns_to_keep]
+        filtered_mask = mask[rows_to_keep, :][:, columns_to_keep]
+
+        # find the indices of the input cells in the flattened 2d grid
+        indices = _find_grid_indices(np.ravel(filtered_pixels), cell_ids.data)
+
+        # generate new coordinates
+        new_lon, new_lat = hp.pix2ang(
+            self.nside, filtered_pixels, nest=True, lonlat=True
+        )
+
+        new_dims = ["y", "x"]
+        new_sizes = dict(zip(new_dims, filtered_pixels.shape))
+
+        reshaped_mask = xr.DataArray(filtered_mask, dims=new_dims)
+        new_coords = xr.Dataset(
+            coords={
+                "cell_ids": (new_dims, filtered_pixels, cell_ids.attrs),
+                "latitude": (new_dims, new_lat, ds["latitude"].attrs),
+                "longitude": (new_dims, new_lon, ds["longitude"].attrs),
+            }
+        )
+
+        # apply the reshaping
+        coords_to_drop = ["cell_ids", "latitude", "longitude"]
+        reshaped = (
+            xr.apply_ufunc(
+                _to_2d,
+                ds.drop_vars(coords_to_drop),
+                xr.DataArray(indices, dims="new_cells"),
+                input_core_dims=[[dim], ["new_cells"]],
+                output_core_dims=[new_dims],
+                kwargs={"new_shape": tuple(new_sizes.values())},
+                dask="parallelized",
+                dask_gufunc_kwargs={"output_sizes": new_sizes},
+                vectorize=True,
+                keep_attrs=True,
+            )
+            .where(reshaped_mask)
+            .assign_coords(new_coords.coords)
+        )
+
+        # rotate if necessary
+        return self.rotate(reshaped, direction="global")
 
     def to_2d(self, ds, dim="cells"):
         # rotate if necessary
