@@ -6,7 +6,6 @@ The development of Xarray-Healpy was initiated to meet the specific requirements
 
 Given the particular characteristics of the Hierarchical Equal Area Grid, our aim is to provide solutions for Travel Time Analysis (like, H3 Travel Times - https://observablehq.com/@nrabinowitz/h3-travel-times), taking into account land masks and oceanic physical properties using Xarray-Healpy, with the goal of improving the tracking of fish habitats.
 
-
 ## How to test examples on your jupyterlab enviroment
 
 ```
@@ -18,5 +17,3 @@ pip install -e .
 ipython kernel install --name xarray-healpy-test --user
 
 ```
-
-
