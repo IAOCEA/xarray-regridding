@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 
 import xarray as xr
 
-from xarray_healpy.interpolation.bilinear import bilinear_interpolation_weights
+from xarray_regridding.interpolation.bilinear import bilinear_interpolation_weights
 
 interpolation_methods = {
     "bilinear": bilinear_interpolation_weights,

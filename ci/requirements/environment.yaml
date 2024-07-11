@@ -1,4 +1,4 @@
-name: xarray-healpy-tests
+name: xarray-regridding-tests
 channels:
   - conda-forge
 dependencies:

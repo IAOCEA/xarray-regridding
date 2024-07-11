@@ -1,5 +1,5 @@
 [project]
-name = "xarray-healpy"
+name = "xarray-regridding"
 requires-python = ">= 3.10"
 license = {text = "MIT"}
 dependencies = [
@@ -22,7 +22,7 @@ requires = ["setuptools>=64.0", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["xarray_healpy"]
+packages = ["xarray_regridding"]
 
 [tool.setuptools_scm]
 fallback_version = "9999"
@@ -32,4 +32,4 @@ profile = "black"
 skip_gitignore = true
 float_to_top = true
 default_section = "THIRDPARTY"
-known_first_party = "xarray_healpy"
+known_first_party = "xarray_regridding"
