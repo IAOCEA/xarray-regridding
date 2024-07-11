@@ -1,10 +1,10 @@
 try:
-    from . import cdshealpix
+    from xarray_regridding.healpix import cdshealpix
 except ImportError:
     cdshealpix = None
 
 try:
-    from . import healpy
+    from xarray_regridding.healpix import healpy
 except ImportError:
     healpy = None
 
