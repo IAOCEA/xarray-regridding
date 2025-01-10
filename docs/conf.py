@@ -1,7 +1,7 @@
 # -- Project information -----------------------------------------------------
 import datetime as dt
 
-project = "xarray-regridding"
+project = "xarray-healpy"
 author = f"{project} developers"
 initial_year = "2023"
 year = dt.datetime.now().year
@@ -23,8 +23,8 @@ extensions = [
 ]
 
 extlinks = {
-    "issue": ("https://github.com/keewis/xarray-regridding/issues/%s", "GH%s"),
-    "pull": ("https://github.com/keewis/xarray-regridding/pull/%s", "PR%s"),
+    "issue": ("https://github.com/keewis/xarray-healpy/issues/%s", "GH%s"),
+    "pull": ("https://github.com/keewis/xarray-healpy/pull/%s", "PR%s"),
 }
 
 # Add any paths that contain templates here, relative to this directory.

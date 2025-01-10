@@ -1,4 +1,4 @@
-name: xarray-regridding-docs
+name: xarray-healpy-docs
 channels:
   - conda-forge
 dependencies:
