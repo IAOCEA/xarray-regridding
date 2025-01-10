@@ -10,7 +10,7 @@ import shapely
 import xarray as xr
 from astropy.coordinates import Latitude, Longitude
 
-from xarray_regridding.conversions import base_pixel
+from xarray_healpy.conversions import base_pixel
 
 
 @numba.jit(nopython=True, parallel=True)
